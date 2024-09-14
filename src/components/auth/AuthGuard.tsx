@@ -3,6 +3,7 @@
 import { useAuth } from "@/context/auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import AuthLoadingScreen from "./AuthLoadingScreen";
 
 const AuthGuard = ({ children }: { children: any }) => {
 	const { user, loading } = useAuth();
@@ -15,7 +16,7 @@ const AuthGuard = ({ children }: { children: any }) => {
 	}, [user, router, loading]);
 
 	if (loading) {
-		return <div>Loading...</div>;
+		return <AuthLoadingScreen />;
 	}
 
 	return children;
