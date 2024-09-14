@@ -13,7 +13,7 @@ export default function Login() {
 					</div>
 				</div>
 				<div className="flex h-full w-full flex-col items-center justify-center px-2 lg:px-0">
-					<div className="w-full max-w-[27rem] rounded-md bg-app-black px-4 py-4 sm:px-6 lg:max-w-[28rem] lg:p-8">
+					<div className="w-full max-w-[27rem] rounded-md bg-app-black px-4 py-8 sm:px-6 lg:max-w-[28rem] lg:p-8">
 						<div className="mb-6 flex w-full justify-center lg:hidden">
 							<Image src="/logo.webp" width={100} height={100} alt="Nacos" />
 						</div>

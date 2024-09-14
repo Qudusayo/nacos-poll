@@ -1,9 +1,9 @@
 "use client";
 
+import { Eye, EyeOff } from "@/components/icons";
 import { useAuth } from "@/context/auth";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { IoEye, IoEyeOff } from "react-icons/io5";
 
 type LoginFormInputs = {
 	matricNumber: string;
@@ -66,13 +66,13 @@ const LoginForm = () => {
 					/>
 					<button
 						type="button"
-						className="absolute right-2 top-3 text-[20px] lg:top-[14px] lg:text-[23px]"
+						className="absolute right-3 top-3 text-[20px] lg:top-[16px]"
 						onClick={() => setShowPassword(!showPassword)}
 					>
 						{showPassword ? (
-							<IoEyeOff className="text-app-green" />
+							<EyeOff className="h-5 w-5 fill-app-green stroke-app-green text-app-green" />
 						) : (
-							<IoEye className="text-app-green" />
+							<Eye className="h-5 w-5 stroke-app-green text-app-green" />
 						)}
 					</button>
 				</div>
