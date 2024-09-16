@@ -22,7 +22,7 @@ const UserCheckboxGroup = ({
 			color="warning"
 			classNames={{
 				wrapper:
-					"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-9",
+					"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4",
 			}}
 			name={name}
 			value={[selectedValue]}

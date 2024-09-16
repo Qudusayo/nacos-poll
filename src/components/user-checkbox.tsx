@@ -15,13 +15,12 @@ const UserCheckbox = ({ user, ...props }: iUserCheckbox) => {
 			aria-label={user.name}
 			classNames={{
 				base: cn(
-					"inline-flex w-full max-w-md bg-[#141414] w-fit",
+					"inline-flex w-full max-w-md bg-[#141414] w-full",
 					"hover:bg-[#141414]/80 items-center justify-start",
 					"cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
-					"data-[selected=true]:border-[#FFF]",
-					"[&>span:nth-of-type(2)]:absolute",
+					"data-[selected=true]:border-[#FFF] !m-0",
+					"[&>span:nth-of-type(2)]:hidden",
 				),
-				label: "w-fit",
 			}}
 			isSelected={props.isSelected}
 			// onValueChange={}
@@ -31,18 +30,16 @@ const UserCheckbox = ({ user, ...props }: iUserCheckbox) => {
 				<Image
 					src={user.avatar}
 					alt={user.name + " avatar"}
-					className="rounded-lg"
+					className="w-full rounded-lg"
 				/>
-				<div className="flex flex-col">
-					<span
-						className={cn(
-							"max-w-[225px] truncate text-xl font-light leading-4 text-default-500",
-							props.isSelected && "text-[#FFF]",
-						)}
-					>
-						{user.name}
-					</span>
-				</div>
+				<span
+					className={cn(
+						"w-full text-lg font-light leading-4 text-default-500",
+						props.isSelected && "text-[#FFF]",
+					)}
+				>
+					{user.name}
+				</span>
 			</div>
 		</Checkbox>
 	);
