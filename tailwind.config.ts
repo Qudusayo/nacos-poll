@@ -1,5 +1,6 @@
 import { nextui } from "@nextui-org/react";
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 const config: Config = {
 	content: [
@@ -10,6 +11,9 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
+			textShadow: {
+				logo: "1px 1px 0 white, -1px 1px 0 white, 1px -1px 0 white,-1px -1px 0 white",
+			},
 			backgroundImage: {
 				"gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
 				"gradient-conic":
@@ -23,6 +27,18 @@ const config: Config = {
 		},
 	},
 	darkMode: "class",
-	plugins: [nextui()],
+	plugins: [
+		nextui(),
+		plugin(function ({ matchUtilities, theme }) {
+			matchUtilities(
+				{
+					"text-shadow": value => ({
+						textShadow: value,
+					}),
+				},
+				{ values: theme("textShadow") },
+			);
+		}),
+	],
 };
 export default config;
