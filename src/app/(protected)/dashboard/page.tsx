@@ -6,7 +6,7 @@ import { contestants } from "@/contestants";
 import { Button } from "@nextui-org/react";
 import { useState } from "react";
 
-const page = () => {
+const Dashboard = () => {
 	const [position, setPosition] = useState(1);
 	const [president, setPresident] = useState("");
 
@@ -49,4 +49,4 @@ const page = () => {
 	);
 };
 
-export default page;
+export default Dashboard;

@@ -1,5 +1,6 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
 	createContext,
@@ -45,15 +46,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		}
 	}, []);
 
-	const login = (matricNumber: string, password: string) => {
-		if (matricNumber === "214870" && password === "password") {
-			const user = { matricNumber, name: "John Doe" };
-			setUser(user);
-			localStorage.setItem("user", JSON.stringify(user));
-			router.push("/");
-		} else {
-			alert("Invalid credentials");
-		}
+	const login = async (matricNumber: string, password: string) => {
+		try {
+			const login = await signIn("credentials", {
+				username: matricNumber,
+				password,
+				redirect: false,
+				redirectTo: "/dashboard",
+			});
+		} catch (error) {}
+		// if (matricNumber === "214870" && password === "password") {
+		// 	const user = { matricNumber, name: "John Doe" };
+		// 	setUser(user);
+		// 	localStorage.setItem("user", JSON.stringify(user));
+		// 	router.push("/");
+		// } else {
+		// 	alert("Invalid credentials");
+		// }
 	};
 
 	const logout = () => {

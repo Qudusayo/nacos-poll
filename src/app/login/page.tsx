@@ -7,7 +7,6 @@ export default function Login() {
 		<main className="h-screen bg-black">
 			<div className="h-full lg:grid lg:grid-cols-2">
 				<div className="hidden flex-col items-center justify-center gap-7 bg-app-black lg:flex">
-					<div className="text-4xl font-bold text-app-green">Nacos Poll</div>
 					<div>
 						<Image src="/logo.webp" width={330} height={330} alt="Nacos" />
 					</div>
@@ -17,8 +16,8 @@ export default function Login() {
 						<div className="mb-6 flex w-full justify-center lg:hidden">
 							<Image src="/logo.webp" width={100} height={100} alt="Nacos" />
 						</div>
-						<div className="mb-5 text-center text-2xl text-app-green">
-							Login
+						<div className="mb-5 text-center text-app-green">
+							<span className="text-2xl">LOGIN</span>
 						</div>
 						<LoginForm />
 					</div>

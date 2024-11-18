@@ -1,9 +1,12 @@
 "use client";
 
 import { Eye, EyeOff } from "@/components/icons";
-import { useAuth } from "@/context/auth";
+import { Button } from "@nextui-org/react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { LoaderCircle } from "../icons";
 
 type LoginFormInputs = {
 	matricNumber: string;
@@ -11,16 +14,29 @@ type LoginFormInputs = {
 };
 
 const LoginForm = () => {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<LoginFormInputs>();
+	const router = useRouter();
+	const { register, handleSubmit, formState } = useForm<LoginFormInputs>();
+	const { errors, isSubmitting } = formState;
 	const [showPassword, setShowPassword] = useState(false);
-	const { login } = useAuth();
 
-	const onSubmit = (data: LoginFormInputs) => {
-		login(data.matricNumber, data.password);
+	const onSubmit = async (data: LoginFormInputs) => {
+		const { matricNumber, password } = data;
+		try {
+			const login = await signIn("credentials", {
+				username: matricNumber,
+				password,
+				redirect: false,
+				redirectTo: "/dashboard",
+			});
+			if (login?.error) throw new Error(login.error);
+			if (login?.url) {
+				alert("Logged in successfully");
+				return router.replace(login.url);
+			}
+		} catch (error: any) {
+			alert("Invalid login Credentials"); // TODO: Handle error
+			// console.log(error);
+		}
 	};
 
 	return (
@@ -34,7 +50,7 @@ const LoginForm = () => {
 					id="matric-number"
 					placeholder="e.g 214870"
 					autoComplete="off"
-					className="rounded-[4px] border border-app-green bg-black px-2 py-2 placeholder-white outline-none ring-offset-2 focus-within:ring-app-green focus:ring-1 focus:ring-app-green lg:px-3 lg:py-3"
+					className="rounded-[4px] border border-app-green bg-black px-2 py-2 placeholder-white outline-none ring-offset-2 focus-within:ring-app-green focus:ring-1 focus:ring-app-green lg:px-3"
 					{...register("matricNumber", {
 						required: "Matric number is required",
 						pattern: {
@@ -59,14 +75,14 @@ const LoginForm = () => {
 						id="password"
 						autoComplete="off"
 						placeholder="Enter your password"
-						className="w-full rounded-[4px] border border-app-green bg-black px-2 py-2 placeholder-white outline-none ring-offset-2 focus-within:ring-app-green focus:ring-1 focus:ring-app-green lg:px-3 lg:py-3"
+						className="w-full rounded-[4px] border border-app-green bg-black px-2 py-2 placeholder-white outline-none ring-offset-2 focus-within:ring-app-green focus:ring-1 focus:ring-app-green lg:px-3"
 						{...register("password", {
 							required: "Password is required",
 						})}
 					/>
 					<button
 						type="button"
-						className="absolute right-3 top-3 text-[20px] lg:top-[16px]"
+						className="absolute right-3 top-3 text-[20px] lg:top-3"
 						onClick={() => setShowPassword(!showPassword)}
 					>
 						{showPassword ? (
@@ -81,12 +97,13 @@ const LoginForm = () => {
 				)}
 			</div>
 			<div className="flex w-full items-center justify-center">
-				<button
-					className="rounded-md bg-app-blue px-6 py-2 outline-none transition-colors focus-within:ring-blue-300 hover:bg-opacity-80 focus:ring-1 focus:ring-blue-300"
+				<Button
+					disabled={isSubmitting}
+					className="w-full rounded-md bg-app-green px-6 py-2 text-white outline-none transition-colors focus-within:ring-blue-300 hover:bg-opacity-80 focus:ring-1 focus:ring-blue-300 disabled:cursor-not-allowed"
 					type="submit"
 				>
-					Login
-				</button>
+					{isSubmitting ? <LoaderCircle className="animate-spin" /> : "Login"}
+				</Button>
 			</div>
 		</form>
 	);
