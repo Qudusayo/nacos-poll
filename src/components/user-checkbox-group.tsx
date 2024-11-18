@@ -1,4 +1,5 @@
 import { CheckboxGroup, CheckboxGroupProps } from "@nextui-org/react";
+import { Contestant } from "../../types";
 import UserCheckbox from "./user-checkbox";
 
 const UserCheckboxGroup = ({
@@ -9,10 +10,7 @@ const UserCheckboxGroup = ({
 	setFieldValue,
 	...props
 }: CheckboxGroupProps & {
-	values: {
-		name: string;
-		avatar: string;
-	}[];
+	values: Contestant[];
 	selectedValue: string;
 	setFieldValue: (value: typeof selectedValue) => void;
 }) => {
@@ -37,11 +35,11 @@ const UserCheckboxGroup = ({
 			{values.map((value, index) => (
 				<UserCheckbox
 					key={index}
-					value={value.name}
-					isSelected={selectedValue === value.name}
+					value={value.candidate_id}
+					isSelected={selectedValue === value.candidate_id}
 					user={{
-						name: value.name,
-						avatar: value.avatar,
+						name: `${value.lastname} ${value.firstname} ${value.middlename[0]}`,
+						avatar: value.voters_path || "",
 					}}
 				/>
 			))}

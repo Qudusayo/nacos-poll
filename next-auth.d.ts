@@ -4,7 +4,7 @@ declare module "next-auth" {
 	// eslint-disable-next-line
 	interface Session {
 		user: {
-			access_token: string;
+			token: string;
 			details: {
 				firstname: string;
 				lastname: string;

@@ -1,52 +1,33 @@
-"use client";
+import { auth } from "@/auth";
+import AuthLoadingScreen from "@/components/auth/AuthLoadingScreen";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import Dashboard from "./dashboard";
 
-import ConfirmationModal from "@/components/confirmation-modal";
-import UserCheckboxGroup from "@/components/user-checkbox-group";
-import { contestants } from "@/contestants";
-import { Button } from "@nextui-org/react";
-import { useState } from "react";
+const page = async () => {
+	const session = await auth();
 
-const Dashboard = () => {
-	const [position, setPosition] = useState(1);
-	const [president, setPresident] = useState("");
+	if (!session) redirect("/login");
 
-	const incrementPosition = () => {
-		setPosition(position + 1);
-	};
+	const token = session.user.token;
 
-	const decrementPosition = () => {
-		setPosition(position - 1 || 1);
-	};
+	const res = await fetch(
+		process.env.NEXT_PUBLIC_BASE_URL + "/api/candidate_details",
+		{
+			method: "GET",
+			headers: {
+				"X-APP-KEY": process.env.NEXT_PUBLIC_X_APP_KEY as string,
+				Authorization: `Bearer ${token}`,
+			},
+		},
+	);
+	const response = await res.json();
 
 	return (
-		<div className="flex flex-1 flex-col gap-20 p-10 px-4 pt-4">
-			<div className="">
-				<div className="top-8 mb-6">
-					<h2 className="text-2xl font-semibold leading-4">President</h2>
-					<span className="text-sm text-gray-500">
-						Select your preferred candidate - ({position}/7)
-					</span>
-				</div>
-
-				<UserCheckboxGroup
-					name="president"
-					selectedValue={president}
-					setFieldValue={setPresident}
-					values={contestants}
-				/>
-			</div>
-			<div className="flex justify-between">
-				<Button onClick={decrementPosition} isDisabled={position === 1}>
-					Back
-				</Button>
-				{position < 7 ? (
-					<Button onClick={incrementPosition}>Next</Button>
-				) : (
-					<ConfirmationModal />
-				)}
-			</div>
-		</div>
+		<Suspense fallback={<AuthLoadingScreen />}>
+			<Dashboard data={response.payload} />
+		</Suspense>
 	);
 };
 
-export default Dashboard;
+export default page;
