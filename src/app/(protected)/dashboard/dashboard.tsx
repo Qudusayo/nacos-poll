@@ -29,7 +29,7 @@ const Dashboard = ({ data }: { data: ContestantsData }) => {
 			<span ref={topRef}></span>
 			<div className="flex flex-1 flex-col gap-20 p-10 px-4 pt-4">
 				<div className="">
-					<div className="top-8 mb-6">
+					<div className="sticky top-0 z-50 mb-6 bg-black pt-1">
 						<h2 className="text-2xl font-semibold leading-4">
 							{data[position - 1]?.label}
 						</h2>
