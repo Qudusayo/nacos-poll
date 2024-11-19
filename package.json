@@ -21,6 +21,7 @@
 		"react-hook-form": "^7.53.0"
 	},
 	"devDependencies": {
+		"@faker-js/faker": "^9.2.0",
 		"@svgr/webpack": "^8.1.0",
 		"@types/node": "^20",
 		"@types/react": "^18",

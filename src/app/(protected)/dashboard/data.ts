@@ -1,31 +1,32 @@
+import { faker } from "@faker-js/faker";
 import { ContestantsData } from "../../../../types";
 
-export const data: ContestantsData = [
-	{
-		label: "Sport Director",
-		data: [
-			{
-				candidate_id: "11",
-				office_name: "Sport Director",
-				lastname: "Adelowo",
-				firstname: "Samuel",
-				middlename: "Damilare",
-				voters_path:
-					"https://election.thearlyearschoolimited.com/uploads/voters/1731887640_0b52ae5f895a37c5e355.jpg",
-			},
-		],
-	},
-	{
-		label: "Vice President",
-		data: [
-			{
-				candidate_id: "8",
-				office_name: "Vice President",
-				lastname: "Akinwusi",
-				firstname: "Ifeoluwa",
-				middlename: "Samuel",
-				voters_path: null,
-			},
-		],
-	},
+function createRandomUser(post: string) {
+	return {
+		candidate_id: faker.string.uuid(),
+		office_name: post,
+		lastname: faker.person.lastName(),
+		firstname: faker.person.firstName(),
+		middlename: faker.person.middleName(),
+		voters_path: faker.image.avatar(),
+	};
+}
+
+// List of post labels
+const posts = [
+	"President",
+	"Vice President",
+	"Secretary",
+	"Treasurer",
+	"Sport Director",
+	"Public Relations Officer",
+	"Financial Secretary",
 ];
+
+// Generate data for all posts
+export const data: ContestantsData = posts.map(post => ({
+	label: post,
+	data: faker.helpers.multiple(() => createRandomUser(post), {
+		count: faker.number.int({ min: 2, max: 7 }),
+	}),
+}));
