@@ -1,7 +1,12 @@
 "use client";
 
-import { User } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+	User,
+} from "@nextui-org/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 
 const Navbar = () => {
@@ -21,16 +26,47 @@ const Navbar = () => {
 					<h2>LL</h2>
 				</div>
 			</div>
+			<UserDetails
+				lastname={lastname}
+				firstname={firstname}
+				middlenamechar={middlename[0]}
+				matric_number={matric_number}
+			/>
+		</div>
+	);
+};
+
+const UserDetails = ({
+	lastname,
+	firstname,
+	middlenamechar,
+	matric_number,
+}: {
+	lastname: string;
+	firstname: string;
+	middlenamechar: string;
+	matric_number: string;
+}) => (
+	<Popover placement="bottom" showArrow={true}>
+		<PopoverTrigger>
 			<User
-				name={`${lastname} ${firstname} ${middlename[0]}`}
+				name={`${lastname} ${firstname} ${middlenamechar}`}
 				description={`Matric No: ${matric_number}`}
 				classNames={{
 					base: "flex-row-reverse",
 					wrapper: "bg-[#141414] p-1 rounded-md px-3",
 				}}
 			/>
-		</div>
-	);
-};
+		</PopoverTrigger>
+		<PopoverContent className="min-w-44 bg-[#141414]">
+			<span
+				className="block w-full cursor-pointer text-center text-danger-500"
+				onClick={() => signOut()}
+			>
+				Logout
+			</span>
+		</PopoverContent>
+	</Popover>
+);
 
 export default Navbar;
