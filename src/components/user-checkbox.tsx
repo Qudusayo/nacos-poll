@@ -21,17 +21,24 @@ const UserCheckbox = ({ user, ...props }: iUserCheckbox) => {
 					"data-[selected=true]:border-[#FFF] !m-0",
 					"[&>span:nth-of-type(2)]:hidden",
 				),
+				label: "w-full h-auto",
 			}}
 			isSelected={props.isSelected}
 			// onValueChange={}
 			{...props}
 		>
-			<div className="flex w-fit flex-col justify-between gap-4">
-				<Image
-					src={user.avatar}
-					alt={user.name + " avatar"}
-					className="w-full rounded-lg"
-				/>
+			<div className="flex w-full flex-col justify-between gap-4">
+				<div>
+					<Image
+						src={user.avatar}
+						alt={user.name + " avatar"}
+						classNames={{
+							img: "absolute inset-0 h-full w-full object-cover object-center",
+							wrapper: "w-full !max-w-full pb-[100%]",
+						}}
+						radius="sm"
+					/>
+				</div>
 				<span
 					className={cn(
 						"w-full text-lg font-light leading-4 text-default-500",
