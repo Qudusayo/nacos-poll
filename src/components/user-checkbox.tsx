@@ -1,6 +1,7 @@
 "use client";
 
-import { Checkbox, CheckboxProps, cn, Image } from "@nextui-org/react";
+import { Checkbox, CheckboxProps, cn } from "@nextui-org/react";
+import UserCard from "./user-card";
 
 interface iUserCheckbox extends CheckboxProps {
 	user: {
@@ -17,7 +18,7 @@ const UserCheckbox = ({ user, ...props }: iUserCheckbox) => {
 				base: cn(
 					"inline-flex w-full max-w-md bg-[#141414] w-full",
 					"hover:bg-[#141414]/80 items-center justify-start",
-					"cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
+					"cursor-pointer rounded-lg gap-2 p-2 border-2 border-transparent",
 					"data-[selected=true]:border-[#FFF] !m-0",
 					"[&>span:nth-of-type(2)]:hidden",
 				),
@@ -27,27 +28,11 @@ const UserCheckbox = ({ user, ...props }: iUserCheckbox) => {
 			// onValueChange={}
 			{...props}
 		>
-			<div className="flex w-full flex-col justify-between gap-4">
-				<div>
-					<Image
-						src={user.avatar}
-						alt={user.name + " avatar"}
-						classNames={{
-							img: "absolute inset-0 h-full w-full object-cover object-center",
-							wrapper: "w-full !max-w-full pb-[100%]",
-						}}
-						radius="sm"
-					/>
-				</div>
-				<span
-					className={cn(
-						"w-full text-lg font-light leading-4 text-default-500",
-						props.isSelected && "text-[#FFF]",
-					)}
-				>
-					{user.name}
-				</span>
-			</div>
+			<UserCard
+				name={user.name}
+				avatar={user.avatar}
+				active={!!props.isSelected}
+			/>
 		</Checkbox>
 	);
 };

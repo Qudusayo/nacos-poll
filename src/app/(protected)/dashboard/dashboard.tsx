@@ -9,7 +9,9 @@ import { ContestantsData } from "../../../../types";
 const Dashboard = ({ data }: { data: ContestantsData }) => {
 	const topRef = useRef(null);
 	const [position, setPosition] = useState(1);
-	const [president, setPresident] = useState("");
+	const [userSelection, setUserSelection] = useState<{ [key: string]: string }>(
+		{},
+	);
 
 	const incrementPosition = () => {
 		setPosition(prev => (prev < data.length ? prev + 1 : prev));
@@ -23,6 +25,14 @@ const Dashboard = ({ data }: { data: ContestantsData }) => {
 		if (topRef.current)
 			(topRef.current as HTMLElement).scrollIntoView({ behavior: "smooth" });
 	}, [position]);
+
+	const setSelection = (key: string, value: string) => {
+		setUserSelection(prev => ({ ...prev, [key]: value }));
+	};
+
+	useEffect(() => {
+		console.log(userSelection);
+	}, [userSelection]);
 
 	return (
 		<>
@@ -38,9 +48,11 @@ const Dashboard = ({ data }: { data: ContestantsData }) => {
 						</span>
 					</div>
 					<UserCheckboxGroup
-						name="president"
-						selectedValue={president}
-						setFieldValue={setPresident}
+						name={data[position - 1].label}
+						selectedValue={userSelection[data[position - 1].label]}
+						setFieldValue={(selection: string) => {
+							setSelection(data[position - 1].label, selection);
+						}}
 						values={data[position - 1].data}
 					/>
 				</div>
@@ -49,9 +61,17 @@ const Dashboard = ({ data }: { data: ContestantsData }) => {
 						Back
 					</Button>
 					{position < data.length ? (
-						<Button onClick={incrementPosition}>Next</Button>
+						<Button
+							onClick={incrementPosition}
+							isDisabled={!userSelection[data[position - 1].label]}
+						>
+							Next
+						</Button>
 					) : (
-						<ConfirmationModal />
+						<ConfirmationModal
+							contestants={data}
+							userSelection={userSelection}
+						/>
 					)}
 				</div>
 			</div>

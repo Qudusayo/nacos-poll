@@ -25,7 +25,6 @@ const UserCheckboxGroup = ({
 			name={name}
 			value={[selectedValue]}
 			onChange={val => {
-				console.log({ val });
 				if (!(val as string[]).length) return;
 				let selectedValues = val as string[];
 				name && setFieldValue(selectedValues[selectedValues.length - 1]);

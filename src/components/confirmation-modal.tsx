@@ -7,8 +7,16 @@ import {
 	ModalHeader,
 	useDisclosure,
 } from "@nextui-org/react";
+import { ContestantsData } from "../../types";
+import UserCard from "./user-card";
 
-const ConfirmationModal = () => {
+const ConfirmationModal = ({
+	contestants,
+	userSelection,
+}: {
+	contestants: ContestantsData;
+	userSelection: { [key: string]: string };
+}) => {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 	return (
@@ -31,13 +39,37 @@ const ConfirmationModal = () => {
 						<>
 							<ModalHeader className="flex flex-col gap-1">
 								<h2 className="text-xl font-medium leading-4">
-									Review Selection
+									Your Selection
 								</h2>
 								<span className="text-sm text-gray-500">
 									Review your selection and confirm your vote.
 								</span>
 							</ModalHeader>
-							<ModalBody></ModalBody>
+							<ModalBody className="grid grid-cols-1 gap-4 overflow-y-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+								{Object.keys(userSelection).map((key, index) => {
+									const selectedCandidate = contestants.find(
+										contestant => contestant.label === key,
+									);
+									return (
+										<div key={index}>
+											{selectedCandidate?.data
+												.filter(
+													contestant =>
+														contestant.candidate_id === userSelection[key],
+												)
+												.map((contestant, index) => (
+													<UserCard
+														key={index}
+														name={`${contestant.lastname} ${contestant.firstname} ${contestant.middlename[0]}`}
+														avatar={contestant.voters_path || ""}
+														post={selectedCandidate?.label}
+														active={true}
+													/>
+												))}
+										</div>
+									);
+								})}
+							</ModalBody>
 							<ModalFooter>
 								<Button color="danger" onPress={onClose}>
 									Cancel
