@@ -92,14 +92,14 @@ const Dashboard = ({ data }: { data: ContestantsData }) => {
 							Next
 						</Button>
 					) : (
-						// Object.keys(userSelection).length === data.length && (
-						<ConfirmationModal
-							contestants={data}
-							submitVote={submitVote}
-							castingVote={castingVote}
-							userSelection={userSelection}
-						/>
-						// )
+						Object.keys(userSelection).length === data.length && (
+							<ConfirmationModal
+								contestants={data}
+								submitVote={submitVote}
+								castingVote={castingVote}
+								userSelection={userSelection}
+							/>
+						)
 					)}
 				</div>
 			</div>
