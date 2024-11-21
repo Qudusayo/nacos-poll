@@ -77,10 +77,20 @@ const ConfirmationModal = ({
 								})}
 							</ModalBody>
 							<ModalFooter>
-								<Button color="danger" onPress={onClose}>
+								<Button
+									color="danger"
+									onPress={onClose}
+									isDisabled={castingVote}
+								>
 									Cancel
 								</Button>
-								<Button onPress={submitVote}>Submit</Button>
+								<Button
+									onPress={submitVote}
+									isLoading={castingVote}
+									isDisabled={castingVote}
+								>
+									Submit
+								</Button>
 							</ModalFooter>
 						</>
 					)}
