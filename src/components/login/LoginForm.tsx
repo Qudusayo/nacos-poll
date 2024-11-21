@@ -4,7 +4,7 @@ import { Eye, EyeOff } from "@/components/icons";
 import { Button } from "@nextui-org/react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { LoaderCircle } from "../icons";
@@ -16,6 +16,7 @@ type LoginFormInputs = {
 
 const LoginForm = () => {
 	const router = useRouter();
+
 	const { register, handleSubmit, formState, reset } =
 		useForm<LoginFormInputs>();
 	const { errors, isSubmitting } = formState;
@@ -42,6 +43,12 @@ const LoginForm = () => {
 			toast.error(errorMessage?.message ?? "Invalid login credentials");
 		}
 	};
+
+	useEffect(() => {
+		if (window.localStorage.getItem("nacos-polled")) {
+			router.replace("/thanks");
+		}
+	}, []);
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="pt-3">

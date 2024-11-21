@@ -4,6 +4,7 @@ import { castVote } from "@/actions";
 import ConfirmationModal from "@/components/confirmation-modal";
 import UserCheckboxGroup from "@/components/user-checkbox-group";
 import { Button } from "@nextui-org/react";
+import { signOut } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { ContestantsData } from "../../../../types";
@@ -39,8 +40,8 @@ const Dashboard = ({ data }: { data: ContestantsData }) => {
 			await toast.promise(castVote(userSelection), {
 				loading: "Submitting vote...",
 				success: data => {
-					console.log("SUCCESS:", data);
 					if (data.status) {
+						window.localStorage.setItem("nacos-polled", "true");
 						return <span>{data.message}</span>;
 					} else {
 						throw new Error(JSON.stringify(data));
@@ -51,8 +52,9 @@ const Dashboard = ({ data }: { data: ContestantsData }) => {
 					return <span>{err.message}</span>;
 				},
 			});
+			signOut();
 		} catch (error) {
-			console.log("ERROR:", error);
+			// console.log("ERROR:", error);
 		} finally {
 			setCastingVote(false);
 		}
