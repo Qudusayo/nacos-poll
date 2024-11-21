@@ -11,9 +11,13 @@ import { ContestantsData } from "../../types";
 import UserCard from "./user-card";
 
 const ConfirmationModal = ({
+	submitVote,
 	contestants,
+	castingVote,
 	userSelection,
 }: {
+	castingVote: boolean;
+	submitVote: () => void;
 	contestants: ContestantsData;
 	userSelection: { [key: string]: string };
 }) => {
@@ -33,6 +37,8 @@ const ConfirmationModal = ({
 					header: "border-b-[1px] border-[#292f46] text-[#FFFFFF] font-medium",
 					footer: "border-t-[1px] border-[#292f46] justify-between",
 				}}
+				hideCloseButton={castingVote}
+				isKeyboardDismissDisabled={false}
 			>
 				<ModalContent>
 					{onClose => (
@@ -74,7 +80,7 @@ const ConfirmationModal = ({
 								<Button color="danger" onPress={onClose}>
 									Cancel
 								</Button>
-								<Button onPress={onClose}>Submit</Button>
+								<Button onPress={submitVote}>Submit</Button>
 							</ModalFooter>
 						</>
 					)}

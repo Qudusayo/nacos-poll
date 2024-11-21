@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { LoaderCircle } from "../icons";
 
 type LoginFormInputs = {
@@ -15,7 +16,8 @@ type LoginFormInputs = {
 
 const LoginForm = () => {
 	const router = useRouter();
-	const { register, handleSubmit, formState } = useForm<LoginFormInputs>();
+	const { register, handleSubmit, formState, reset } =
+		useForm<LoginFormInputs>();
 	const { errors, isSubmitting } = formState;
 	const [showPassword, setShowPassword] = useState(false);
 
@@ -28,35 +30,33 @@ const LoginForm = () => {
 				redirect: false,
 				redirectTo: "/dashboard",
 			});
+
 			if (login?.error) throw new Error(login.error);
 			if (login?.url) {
-				alert("Logged in successfully");
-				return router.replace(login.url);
+				toast.success("You're successfully authenticated");
+				reset();
+				return router.replace("/dashboard");
 			}
 		} catch (error: any) {
-			alert("Invalid login Credentials"); // TODO: Handle error
-			// console.log(error);
+			const errorMessage = JSON.parse(error?.message ?? "{}");
+			toast.error(errorMessage?.message ?? "Invalid login credentials");
 		}
 	};
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="pt-3">
 			<div className="mb-6 flex flex-col space-y-2">
-				<label htmlFor="matric-number" className="text-app-green">
-					Matric Number
+				<label htmlFor="username" className="text-app-green">
+					Username
 				</label>
 				<input
 					type="text"
-					id="matric-number"
-					placeholder="e.g 214870"
+					id="username"
+					placeholder="e.g Username"
 					autoComplete="off"
 					className="rounded-[4px] border border-app-green bg-black px-2 py-2 placeholder-white outline-none ring-offset-2 focus-within:ring-app-green focus:ring-1 focus:ring-app-green lg:px-3"
 					{...register("matricNumber", {
-						required: "Matric number is required",
-						pattern: {
-							value: /^\d{6}$/,
-							message: "Matric number must be a 6-digit number",
-						},
+						required: "Username is required",
 					})}
 				/>
 				{errors.matricNumber && (

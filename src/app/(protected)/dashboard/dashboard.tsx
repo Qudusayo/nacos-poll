@@ -1,9 +1,11 @@
 "use client";
 
+import { castVote } from "@/actions";
 import ConfirmationModal from "@/components/confirmation-modal";
 import UserCheckboxGroup from "@/components/user-checkbox-group";
 import { Button } from "@nextui-org/react";
 import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { ContestantsData } from "../../../../types";
 
 const Dashboard = ({ data }: { data: ContestantsData }) => {
@@ -12,6 +14,7 @@ const Dashboard = ({ data }: { data: ContestantsData }) => {
 	const [userSelection, setUserSelection] = useState<{ [key: string]: string }>(
 		{},
 	);
+	const [castingVote, setCastingVote] = useState(false);
 
 	const incrementPosition = () => {
 		setPosition(prev => (prev < data.length ? prev + 1 : prev));
@@ -30,9 +33,26 @@ const Dashboard = ({ data }: { data: ContestantsData }) => {
 		setUserSelection(prev => ({ ...prev, [key]: value }));
 	};
 
-	useEffect(() => {
-		console.log(userSelection);
-	}, [userSelection]);
+	const submitVote = async () => {
+		try {
+			setCastingVote(true);
+			await toast.promise(castVote(userSelection), {
+				loading: "Submitting vote...",
+				success: data => {
+					console.log("SUCCESS:", data);
+					return <span>{data.message}</span>;
+				},
+				error: error => {
+					const err = JSON.parse(error.message);
+					return <span>{err.message}</span>;
+				},
+			});
+		} catch (error) {
+			console.log("ERROR:", error);
+		} finally {
+			setCastingVote(false);
+		}
+	};
 
 	return (
 		<>
@@ -70,6 +90,8 @@ const Dashboard = ({ data }: { data: ContestantsData }) => {
 					) : (
 						<ConfirmationModal
 							contestants={data}
+							submitVote={submitVote}
+							castingVote={castingVote}
 							userSelection={userSelection}
 						/>
 					)}
