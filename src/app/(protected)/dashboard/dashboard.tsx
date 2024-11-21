@@ -40,7 +40,11 @@ const Dashboard = ({ data }: { data: ContestantsData }) => {
 				loading: "Submitting vote...",
 				success: data => {
 					console.log("SUCCESS:", data);
-					return <span>{data.message}</span>;
+					if (data.status) {
+						return <span>{data.message}</span>;
+					} else {
+						throw new Error(JSON.stringify(data));
+					}
 				},
 				error: error => {
 					const err = JSON.parse(error.message);
@@ -88,12 +92,14 @@ const Dashboard = ({ data }: { data: ContestantsData }) => {
 							Next
 						</Button>
 					) : (
+						// Object.keys(userSelection).length === data.length && (
 						<ConfirmationModal
 							contestants={data}
 							submitVote={submitVote}
 							castingVote={castingVote}
 							userSelection={userSelection}
 						/>
+						// )
 					)}
 				</div>
 			</div>

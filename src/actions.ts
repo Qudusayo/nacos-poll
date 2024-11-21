@@ -37,36 +37,13 @@ export async function castVote(selection: {
 		);
 
 		const response: Response = await vote_request.json();
-		console.log(response);
-		// {
-		//   status: true,
-		//   message: 'You have successfully cast your vote',
-		//   payload: null
-		// }
-		if (response.status) {
-			return response;
-		} else {
-			throw new Error(JSON.stringify(response));
-		}
+
+		return response;
 	} catch (error: unknown) {
-		let errorMsg: Response;
-		try {
-			if (error instanceof Error) {
-				errorMsg = JSON.parse(error.message);
-			} else {
-				errorMsg = {
-					status: false,
-					message: "An unknown error occurred",
-					payload: null,
-				};
-			}
-		} catch (parseError) {
-			errorMsg = {
-				status: false,
-				message: "An unknown error occurred",
-				payload: null,
-			};
-		}
-		throw new Error(JSON.stringify(errorMsg));
+		return {
+			status: false,
+			message: "An unknown error occurred",
+			payload: null,
+		};
 	}
 }
