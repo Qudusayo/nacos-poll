@@ -27,9 +27,9 @@ const Navbar = () => {
 				</div>
 			</div>
 			<UserDetails
-				lastname={lastname}
-				firstname={firstname}
-				middlenamechar={middlename[0]}
+				lastname={lastname || ""}
+				firstname={firstname || ""}
+				middlenamechar={middlename[0] || ""}
 				matric_number={matric_number}
 			/>
 		</div>
