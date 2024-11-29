@@ -37,7 +37,7 @@ const UserCheckboxGroup = ({
 					value={value.candidate_id}
 					isSelected={selectedValue === value.candidate_id}
 					user={{
-						name: `${value.lastname} ${value.firstname} ${value.middlename[0]}`,
+						name: `${value?.lastname || ""} ${value?.firstname || ""} ${value?.middlename[0] || ""}`,
 						avatar: value.voters_path || "",
 					}}
 				/>
