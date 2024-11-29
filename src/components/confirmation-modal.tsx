@@ -66,7 +66,7 @@ const ConfirmationModal = ({
 												.map((contestant, index) => (
 													<UserCard
 														key={index}
-														name={`${contestant.lastname} ${contestant.firstname} ${contestant.middlename[0]}`}
+														name={`${contestant.lastname || ""} ${contestant.firstname || ""} ${contestant.middlename[0] || ""}`}
 														avatar={contestant.voters_path || ""}
 														post={selectedCandidate?.label}
 														active={true}
