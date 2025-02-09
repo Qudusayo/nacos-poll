@@ -1,9 +1,13 @@
 "use client";
 
-import { useAuth } from "@/context/auth";
-import { useState } from "react";
+import { Eye, EyeOff } from "@/components/icons";
+import { Button } from "@nextui-org/react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { IoEye, IoEyeOff } from "react-icons/io5";
+import toast from "react-hot-toast";
+import { LoaderCircle } from "../icons";
 
 type LoginFormInputs = {
 	matricNumber: string;
@@ -11,36 +15,55 @@ type LoginFormInputs = {
 };
 
 const LoginForm = () => {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<LoginFormInputs>();
-	const [showPassword, setShowPassword] = useState(false);
-	const { login } = useAuth();
+	const router = useRouter();
 
-	const onSubmit = (data: LoginFormInputs) => {
-		login(data.matricNumber, data.password);
+	const { register, handleSubmit, formState, reset } =
+		useForm<LoginFormInputs>();
+	const { errors, isSubmitting } = formState;
+	const [showPassword, setShowPassword] = useState(false);
+
+	const onSubmit = async (data: LoginFormInputs) => {
+		const { matricNumber, password } = data;
+		try {
+			const login = await signIn("credentials", {
+				username: matricNumber,
+				password,
+				redirect: false,
+				redirectTo: "/dashboard",
+			});
+
+			if (login?.error) throw new Error(login.error);
+			if (login?.url) {
+				toast.success("You're successfully authenticated");
+				reset();
+				return router.replace("/dashboard");
+			}
+		} catch (error: any) {
+			const errorMessage = JSON.parse(error?.message ?? "{}");
+			toast.error(errorMessage?.message ?? "Invalid login credentials");
+		}
 	};
+
+	useEffect(() => {
+		if (window.localStorage.getItem("nacos-polled")) {
+			router.replace("/thanks");
+		}
+	}, []);
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="pt-3">
 			<div className="mb-6 flex flex-col space-y-2">
-				<label htmlFor="matric-number" className="text-app-green">
-					Matric Number
+				<label htmlFor="username" className="text-app-green">
+					Username
 				</label>
 				<input
 					type="text"
-					id="matric-number"
-					placeholder="e.g 214870"
+					id="username"
+					placeholder="e.g Username"
 					autoComplete="off"
-					className="rounded-[4px] border border-app-green bg-black px-2 py-2 placeholder-white outline-none ring-offset-2 focus-within:ring-app-green focus:ring-1 focus:ring-app-green lg:px-3 lg:py-3"
+					className="rounded-[4px] border border-app-green bg-black px-2 py-2 placeholder-white outline-none ring-offset-2 focus-within:ring-app-green focus:ring-1 focus:ring-app-green lg:px-3"
 					{...register("matricNumber", {
-						required: "Matric number is required",
-						pattern: {
-							value: /^\d{6}$/,
-							message: "Matric number must be a 6-digit number",
-						},
+						required: "Username is required",
 					})}
 				/>
 				{errors.matricNumber && (
@@ -59,20 +82,20 @@ const LoginForm = () => {
 						id="password"
 						autoComplete="off"
 						placeholder="Enter your password"
-						className="w-full rounded-[4px] border border-app-green bg-black px-2 py-2 placeholder-white outline-none ring-offset-2 focus-within:ring-app-green focus:ring-1 focus:ring-app-green lg:px-3 lg:py-3"
+						className="w-full rounded-[4px] border border-app-green bg-black px-2 py-2 placeholder-white outline-none ring-offset-2 focus-within:ring-app-green focus:ring-1 focus:ring-app-green lg:px-3"
 						{...register("password", {
 							required: "Password is required",
 						})}
 					/>
 					<button
 						type="button"
-						className="absolute right-2 top-3 text-[20px] lg:top-[14px] lg:text-[23px]"
+						className="absolute right-3 top-3 text-[20px] lg:top-3"
 						onClick={() => setShowPassword(!showPassword)}
 					>
 						{showPassword ? (
-							<IoEyeOff className="text-app-green" />
+							<EyeOff className="h-5 w-5 fill-app-green stroke-app-green text-app-green" />
 						) : (
-							<IoEye className="text-app-green" />
+							<Eye className="h-5 w-5 stroke-app-green text-app-green" />
 						)}
 					</button>
 				</div>
@@ -81,12 +104,13 @@ const LoginForm = () => {
 				)}
 			</div>
 			<div className="flex w-full items-center justify-center">
-				<button
-					className="rounded-md bg-app-blue px-6 py-2 outline-none transition-colors focus-within:ring-blue-300 hover:bg-opacity-80 focus:ring-1 focus:ring-blue-300"
+				<Button
+					disabled={isSubmitting}
+					className="w-full rounded-md bg-app-green px-6 py-2 text-white outline-none transition-colors focus-within:ring-blue-300 hover:bg-opacity-80 focus:ring-1 focus:ring-blue-300 disabled:cursor-not-allowed"
 					type="submit"
 				>
-					Login
-				</button>
+					{isSubmitting ? <LoaderCircle className="animate-spin" /> : "Login"}
+				</Button>
 			</div>
 		</form>
 	);
